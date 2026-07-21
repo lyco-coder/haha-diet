@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>갱년기 행동심리학: 대사와 심리의 통합적 이해</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #fcfaf8; color: #4a4541; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(230, 220, 210, 0.5); }
+        .tab-active { border-bottom: 3px solid #d4a373; color: #d4a373; font-weight: 700; }
+        .vicious-cycle-node { transition: all 0.3s ease; cursor: pointer; }
+        .vicious-cycle-node:hover { transform: scale(1.05); filter: brightness(1.1); }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+<!-- Chosen Palette: Creamy Harmony (Off-white background, Warm Sand, Muted Sage, Terracotta accents) -->
+
+<!-- Application Structure Plan: 
+1. 대시보드형 네비게이션: 보고서의 방대한 내용을 4가지 핵심 테마(내분비 대사, 식욕 호르몬, 심리 및 정서적 섭식, 통합 솔루션)로 구조화하여 사용자가 원하는 인사이트를 즉각적으로 선택할 수 있도록 설계.
+2. 인터랙티브 데이터 탐색: 단순 텍스트 나열이 아닌, '폐경 전/후' 비교 시뮬레이션, 호르몬 변화에 따른 식욕 그래프, TFEQ 섭식 행동 자가 체크 등 동적 요소를 배치하여 정보 습득의 몰입감을 높임.
+3. 단계별 서사 구조: 생물학적 변화(Hormone)에서 시작하여 행동적 결과(Eating)를 거쳐 심리학적 해결책(CBT/ACT)으로 이어지는 논리적 흐름을 구축하여 사용자가 자신의 상태를 객관적으로 이해할 수 있도록 유도.
+-->
+
+<!-- Visualization & Content Choices: 
+- 목표: 정보 전달 및 비교 -> 폐경 전/후 지방 분포 및 근육량 변화를 Chart.js(Bar)로 시각화하여 '근감소성 비만'의 심각성 강조.
+- 목표: 관계 설명 -> 수면 박탈에 따른 그렐린/렙틴의 역전 현상을 선형 차트로 구현하여 식욕 폭발의 생물학적 근거 제시.
+- 목표: 조직 및 체계화 -> 11β-HSD1 효소와 코르티솔의 악순환 고리를 인터랙티브 다이어그램(HTML/CSS/JS)으로 시각화.
+- 목표: 행동 수정 제안 -> TFEQ의 3가지 요소를 카드 형태로 제시하고 클릭 시 구체적인 행동 심리학적 중재 전략을 노출.
+- 확인: 모든 차트는 Canvas 기반 Chart.js 사용. SVG 및 Mermaid JS 미사용.
+-->
+
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<nav class="sticky top-0 z-50 w-full glass-card border-b border-orange-100 px-4 py-3">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <h1 class="text-xl font-bold text-stone-700 flex items-center gap-2">
+            <span class="bg-stone-700 text-white p-1 rounded">M</span> 갱년기 행동심리학 리포트
+        </h1>
+        <div class="flex space-x-6 text-sm overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+            <button onclick="switchSection('bio')" id="nav-bio" class="tab-active whitespace-nowrap px-2 py-1 transition-all">신체 및 대사</button>
+            <button onclick="switchSection('appetite')" id="nav-appetite" class="whitespace-nowrap px-2 py-1 transition-all">식욕과 호르몬</button>
+            <button onclick="switchSection('psych')" id="nav-psych" class="whitespace-nowrap px-2 py-1 transition-all">심리와 섭식</button>
+            <button onclick="switchSection('solution')" id="nav-solution" class="whitespace-nowrap px-2 py-1 transition-all">통합 솔루션</button>
+        </div>
+    </div>
+</nav>
+
+<main class="max-w-6xl mx-auto px-4 py-10 min-h-screen">
+
+    <!-- Section: Introduction -->
+    <header class="mb-16 text-center">
+        <span class="text-xs font-bold tracking-widest text-stone-400 uppercase">New Paradigm Shift</span>
+        <h2 class="text-3xl md:text-4xl font-bold mt-2 text-stone-800 leading-tight">의지력을 넘어선 <br class="md:hidden">생물학적 폭풍의 이해</h2>
+        <p class="mt-4 text-stone-600 max-w-2xl mx-auto">중년 여성의 체중 증가는 단순한 나태함이 아닙니다. 에스트로겐 고갈과 뇌의 신경내분비적 변화가 빚어낸 복합적인 결과물을 행동심리학적 관점에서 해부합니다.</p>
+    </header>
+
+    <!-- Section 1: Bio-Metabolism -->
+    <section id="sec-bio" class="section-content animate-in fade-in duration-500">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h3 class="text-2xl font-bold text-stone-800 mb-4 italic border-l-4 border-stone-800 pl-4">내 몸의 보이지 않는 엔진, 기초대사량의 붕괴</h3>
+                <p class="text-stone-600 leading-relaxed mb-6">
+                    폐경 전환기는 단순한 노화가 아닌 <strong>대사적 재배치</strong>의 시기입니다. 에스트로겐의 보호막이 사라지면 뇌 시상하부의 에너지 제어 기능이 상실되어, 과거와 똑같이 먹고 움직여도 지방이 복부 내장으로 무섭게 집중됩니다. 특히 근육량의 급격한 감소는 기초대사량(BMR)을 하루 200kcal 이상 떨어뜨리는 '근감소성 비만'을 유발합니다.
+                </p>
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl bg-orange-50 border border-orange-100">
+                        <span class="block text-sm text-orange-600 font-bold mb-1">핵심 지표</span>
+                        <p class="text-stone-700 text-sm">폐경 전환기 5년 동안 내장지방은 평균 <strong>49%</strong> 증가하며, 근육은 매년 <strong>0.5%</strong>씩 소멸합니다.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="glass-card p-6 rounded-3xl shadow-sm">
+                <h4 class="text-center font-bold text-stone-700 mb-4">폐경 전후 체성분 변화 시뮬레이션</h4>
+                <div class="chart-container">
+                    <canvas id="bioChart"></canvas>
+                </div>
+                <p class="text-[11px] text-stone-400 mt-4 text-center">※ 데이터 출처: SWAN(여성 건강 연구) 기반 평균 추정치</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Appetite & Hormones -->
+    <section id="sec-appetite" class="section-content hidden animate-in fade-in duration-500">
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold text-stone-800 mb-4">무너진 장-뇌 축(Gut-Brain Axis): 가짜 배고픔의 정체</h3>
+            <p class="text-stone-600 leading-relaxed">
+                밤마다 찾아오는 식탐은 의지의 문제가 아닙니다. 안면홍조로 인한 수면 부족은 식욕 촉진 호르몬인 <strong>그렐린</strong>을 폭주시시키고, 포만감을 알리는 <strong>렙틴</strong>의 신호를 차단합니다. 뇌는 신체가 기아 상태라고 오인하여 고당분, 고지방 음식을 강력하게 갈구하게 됩니다.
+            </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="md:col-span-2 glass-card p-6 rounded-3xl">
+                <h4 class="font-bold text-stone-700 mb-6">수면 박탈에 따른 식욕 호르몬 변동 (수면 4시간 기준)</h4>
+                <div class="chart-container h-64">
+                    <canvas id="appetiteChart"></canvas>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-2xl border border-stone-100 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                        <span class="font-bold text-stone-700">그렐린(Ghrelin)</span>
+                    </div>
+                    <p class="text-xs text-stone-500">수면 부족 시 28% 급증하여 극심한 공복감을 유발합니다.</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-stone-100 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                        <span class="font-bold text-stone-700">렙틴(Leptin)</span>
+                    </div>
+                    <p class="text-xs text-stone-500">수면 부족 시 18% 감소하며 뇌에 포만감을 전달하지 못합니다.</p>
+                </div>
+                <div class="bg-stone-800 p-5 rounded-2xl text-white shadow-lg">
+                    <span class="text-[10px] uppercase tracking-widest opacity-60">Result</span>
+                    <p class="text-sm mt-1 leading-relaxed">뇌의 보상 회로인 <strong>엔도칸나비노이드</strong> 시스템이 활성화되어 쾌락적 섭식(Hedonic eating)을 유도합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Psychology & Emotional Eating -->
+    <section id="sec-psych" class="section-content hidden animate-in fade-in duration-500">
+        <div class="grid md:grid-cols-2 gap-12">
+            <div class="order-2 md:order-1">
+                <h4 class="font-bold text-stone-700 mb-6 text-center md:text-left italic">스트레스와 코르티솔의 악순환 고리</h4>
+                <div class="relative p-8 flex flex-col items-center justify-center space-y-6">
+                    <div class="vicious-cycle-node w-full p-4 glass-card rounded-xl text-center border-l-4 border-red-400">
+                        <span class="text-sm font-bold">만성 스트레스 & 에스트로겐 저하</span>
+                    </div>
+                    <div class="text-stone-300">▼</div>
+                    <div class="vicious-cycle-node w-full p-4 glass-card rounded-xl text-center border-l-4 border-red-500 shadow-md">
+                        <span class="text-sm font-bold">코르티솔(Cortisol) 급증</span>
+                    </div>
+                    <div class="text-stone-300">▼</div>
+                    <div class="vicious-cycle-node w-full p-4 glass-card rounded-xl text-center border-l-4 border-red-600 shadow-lg">
+                        <span class="text-sm font-bold">내장지방 축적 (11β-HSD1 활성화)</span>
+                    </div>
+                    <div class="absolute -right-4 top-1/2 -translate-y-1/2 hidden md:block text-red-100 text-6xl rotate-90">↺</div>
+                </div>
+                <p class="text-xs text-center text-stone-400 mt-4 italic">내장지방은 스스로 코르티솔을 만들어내어 다시 지방을 불리는 자가 증폭 루프를 가집니다.</p>
+            </div>
+            <div class="order-1 md:order-2">
+                <h3 class="text-2xl font-bold text-stone-800 mb-4">정서적 섭식: 뇌의 화학적 자기 위로</h3>
+                <p class="text-stone-600 leading-relaxed mb-6">
+                    세로토닌과 GABA가 고갈된 중년의 뇌는 우울감을 마비시키기 위해 <strong>도파민</strong>을 갈구합니다. 음식은 가장 쉽고 빠른 '화학적 마약'이 됩니다. 특히 '나쁜 음식'을 철저히 배제하려는 <strong>경직된 억제(Rigid restraint)</strong>는 결국 <strong>탈억제(Disinhibition)</strong>에 의한 폭식을 부릅니다.
+                </p>
+                <div id="tfeq-container" class="space-y-3">
+                    <button onclick="showTfeqDetail(0)" class="w-full text-left p-4 rounded-xl border border-stone-200 hover:bg-stone-50 transition-colors flex justify-between items-center group">
+                        <span class="text-sm font-medium">1. 경직된 억제 (Rigid Restraint)</span>
+                        <span class="text-stone-400 group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                    <button onclick="showTfeqDetail(1)" class="w-full text-left p-4 rounded-xl border border-stone-200 hover:bg-stone-50 transition-colors flex justify-between items-center group">
+                        <span class="text-sm font-medium">2. 탈억제 (Disinhibition)</span>
+                        <span class="text-stone-400 group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                    <button onclick="showTfeqDetail(2)" class="w-full text-left p-4 rounded-xl border border-stone-200 hover:bg-stone-50 transition-colors flex justify-between items-center group">
+                        <span class="text-sm font-medium">3. 가짜 배고픔의 민감성</span>
+                        <span class="text-stone-400 group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                </div>
+                <div id="tfeq-detail" class="mt-4 p-5 bg-stone-50 rounded-2xl hidden border border-stone-100 text-sm text-stone-600 animate-in slide-in-from-top-2">
+                    <!-- Detail content injected by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Solution -->
+    <section id="sec-solution" class="section-content hidden animate-in fade-in duration-500">
+        <div class="text-center mb-16">
+            <h3 class="text-3xl font-bold text-stone-800">다학제적 통합 치료: 의학적 토대와 심리적 유연성</h3>
+            <p class="mt-4 text-stone-600 max-w-2xl mx-auto italic">"의지력을 발휘하라"는 말은 틀렸습니다. <br>호르몬을 복구하고 마음챙김의 지혜를 쌓는 전인적 접근이 필요합니다.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass-card p-8 rounded-3xl border-t-8 border-stone-800 shadow-xl">
+                <h4 class="font-bold text-xl mb-4">생물학적 지지</h4>
+                <ul class="space-y-4 text-sm text-stone-600">
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500">✔</span>
+                        <span><strong>폐경 호르몬 치료 (HRT):</strong> 수면 개선 및 내장지방 이동 차단</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500">✔</span>
+                        <span><strong>GLP-1 작용제:</strong> 시상하부 식욕 중추 안정화 (HRT 병행 시 효과 35% 증폭)</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500">✔</span>
+                        <span><strong>고단백 영양:</strong> 근감소증 방지를 위한 매끼 20-25g 단백질</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="glass-card p-8 rounded-3xl border-t-8 border-stone-500 shadow-xl">
+                <h4 class="font-bold text-xl mb-4">행동심리학 개입</h4>
+                <ul class="space-y-4 text-sm text-stone-600">
+                    <li class="flex items-start gap-2">
+                        <span class="text-blue-500">✔</span>
+                        <span><strong>CBT-Meno:</strong> 신체 불만족과 파국적 인지의 분리 훈련</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-blue-500">✔</span>
+                        <span><strong>유연한 억제:</strong> '살찌는 음식' 이분법을 버리고 양 조절 학습</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-blue-500">✔</span>
+                        <span><strong>자기 관찰:</strong> 식사 일기를 통한 감정적 허기 식별</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="glass-card p-8 rounded-3xl border-t-8 border-stone-300 shadow-xl">
+                <h4 class="font-bold text-xl mb-4">마음챙김과 수용</h4>
+                <ul class="space-y-4 text-sm text-stone-600">
+                    <li class="flex items-start gap-2">
+                        <span class="text-orange-500">✔</span>
+                        <span><strong>Mindful Eating:</strong> 20분간 오감에 집중하며 천천히 씹기</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-orange-500">✔</span>
+                        <span><strong>자기 자비(Self-Compassion):</strong> 다이어트 실패에 대한 자책 멈추기</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-orange-500">✔</span>
+                        <span><strong>저항성 근력 운동:</strong> BMR 회복을 위한 주 3회 근력 강화</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="mt-20 py-12 bg-stone-100 text-stone-500 border-t border-stone-200">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+            <h5 class="text-sm font-bold text-stone-700">Menopause Behavioral Psychology Research</h5>
+            <p class="text-xs mt-1">© 2024 통합적 중년 건강 솔루션. 모든 권리 보유.</p>
+        </div>
+        <div class="flex space-x-4 text-xs">
+            <span class="cursor-help underline decoration-dotted">개인정보처리방침</span>
+            <span class="cursor-help underline decoration-dotted">문의하기</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // State Management
+    let currentSection = 'bio';
+    const sections = ['bio', 'appetite', 'psych', 'solution'];
+    const tfeqData = [
+        { title: "경직된 억제 (Rigid Restraint)", desc: "음식을 '좋은 것'과 '나쁜 것'으로 엄격히 나누고 완벽하게 통제하려는 경향입니다. 이는 작은 실수를 '다이어트 실패'로 인식하게 만들어 폭식의 도화선이 됩니다." },
+        { title: "탈억제 (Disinhibition)", desc: "스트레스나 기분 변화, 외부의 유혹에 노출되었을 때 인지적 식욕 억제력이 무너지는 현상입니다. 감정적 폭식으로 직결되는 가장 위험한 요소입니다." },
+        { title: "가짜 배고픔의 민감성", desc: "심리적 공허함이나 외부의 자극을 진짜 배고픔으로 착각하여 반응하는 정도입니다. BMI 지수와 강한 상관관계를 보입니다." }
+    ];
+
+    function switchSection(id) {
+        sections.forEach(sec => {
+            document.getElementById(`sec-${sec}`).classList.add('hidden');
+            document.getElementById(`nav-${sec}`).classList.remove('tab-active');
+        });
+        document.getElementById(`sec-${id}`).classList.remove('hidden');
+        document.getElementById(`nav-${id}`).classList.add('tab-active');
+        currentSection = id;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showTfeqDetail(index) {
+        const detailBox = document.getElementById('tfeq-detail');
+        detailBox.innerHTML = `<strong>${tfeqData[index].title}:</strong> ${tfeqData[index].desc}`;
+        detailBox.classList.remove('hidden');
+    }
+
+    // Chart.js Implementations
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Bio-Metabolic Chart
+        const bioCtx = document.getElementById('bioChart').getContext('2d');
+        new Chart(bioCtx, {
+            type: 'bar',
+            data: {
+                labels: ['내장지방 증가율(%)', '근육 소실율(%)', '기초대사량 저하(kcal)'],
+                datasets: [
+                    {
+                        label: '폐경 전(기준)',
+                        data: [0, 0, 0],
+                        backgroundColor: '#d6d3d1'
+                    },
+                    {
+                        label: '폐경 후 변화',
+                        data: [49, 8, 200],
+                        backgroundColor: '#a8a29e'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
+                }
+            }
+        });
+
+        // 2. Appetite Hormone Chart
+        const appCtx = document.getElementById('appetiteChart').getContext('2d');
+        new Chart(appCtx, {
+            type: 'line',
+            data: {
+                labels: ['정상 수면', '2시간 부족', '4시간 부족', '6시간 부족'],
+                datasets: [
+                    {
+                        label: '식욕 촉진(그렐린)',
+                        data: [100, 108, 128, 135],
+                        borderColor: '#f87171',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: '포만감(렙틴)',
+                        data: [100, 95, 82, 75],
+                        borderColor: '#60a5fa',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { 
+                        title: { display: true, text: '호르몬 농도(%)', font: { size: 10 } },
+                        suggestedMin: 60, suggestedMax: 150
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
